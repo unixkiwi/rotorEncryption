@@ -1,20 +1,76 @@
 import json
+import argparse
+import os
 
 ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-KEY = 'A'
+def verifyChar(value):
+    if len(value) != 1 or value not in ALPHABET:
+        raise argparse.ArgumentTypeError(f"'{value}' is not a valid char of the alphabet.")
+    return value
 
+def verifyPath(value: str):
+    if not os.path.isfile(value):
+        raise argparse.ArgumentTypeError(f"'{value}' is not a valid file.")
+    return value
+
+def loadFile(path):
+    result = {}
+
+    with open(path, 'r') as f:
+        fileData = json.load(f)
+
+    for i, j in fileData['keyDict'].items():
+        result[int(i)] = j
+
+    return result
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument(
+    "-v", "--verbose",
+    action="store_true",
+    help = "Show verbose outputs. Show Logs"
+)
+
+parser.add_argument(
+    "-f", "--config_file",
+    type = verifyPath,
+    help = "Take input file",
+    required=False
+)
+
+parser.add_argument(
+    "-c", "--char",
+    type = verifyChar,
+    help = "Encrypt char",
+    required=True
+)
+
+parser.add_argument(
+    "-m", "--msg",
+    type = str,
+    help = "Message",
+    required=True
+)
+
+# parse
+args = parser.parse_args()
+
+# Log stuff
 LOG = False
 
-with open("./config.json", 'r') as f:
-    fileData = json.load(f)
+if args.verbose:
+    LOG = True
 
-decryptDict = {}
+# Char stuff
+KEY = args.char
 
-for i, j in fileData['keyDict'].items():
-    decryptDict[int(i)] = j
+# message stuff
+message = args.msg
 
-decryptDictTest = {
+# encryptionDict
+encryptDict = {
     0: 7,
     1: 2,
     2: 1,
@@ -43,43 +99,47 @@ decryptDictTest = {
     25: 21
 }
 
+if args.config_file:
+    encryptDict = loadFile(args.config_file)
+
+
 def log(msg: str):
     if LOG:
         print(msg)
 
-def decrypt(text: str, key: str):
+def rotorEncryption(text: str, key: str, encryptDict):
     result: str = ""
 
     text = text.upper()
 
     keyPos = ALPHABET.index(key)
 
-    log(f"[LOG] Begin decrypt. KeyPos: {keyPos}")
+    log(f"[LOG] Begin encryption. KeyPos: {keyPos}")
 
     for letterIt in range(len(text)):
         letter = text[letterIt]
 
         log(f"\n[LOG] Letter: {letter}")
 
-        decryptCharPos = decryptDict.get((ALPHABET.index(letter) - letterIt - keyPos) % 26)
+        encryptCharPos = encryptDict.get((ALPHABET.index(letter) - letterIt - keyPos) % 26)
 
-        log(f"[LOG] decryptCharPos dict: {decryptCharPos} rawPos: {(ALPHABET.index(letter) + letterIt + keyPos) % 26} raw: {ALPHABET.index(letter)} index: {ALPHABET.index(letter)}")
+        log(f"[LOG] encryptCharPos dict: {encryptCharPos} rawPos: {(ALPHABET.index(letter) - letterIt - keyPos) % 26} raw: {ALPHABET.index(letter)} index: {ALPHABET.index(letter)}")
 
-        decryptCharPos += letterIt
+        encryptCharPos += letterIt
 
-        log(f"[LOG] decryptCharPos plusLetterIt: {decryptCharPos}")
+        log(f"[LOG] encryptCharPos plusLetterIt: {encryptCharPos}")
 
-        decryptCharPos += keyPos
+        encryptCharPos += keyPos
 
-        log(f"[LOG] decryptCharPos plusKey: {decryptCharPos} with modulo: {decryptCharPos % 26}")
+        log(f"[LOG] encryptCharPos plusKey: {encryptCharPos} with modulo: {encryptCharPos % 26}")
 
-        decryptChar = ALPHABET[decryptCharPos % 26]
+        encryptChar = ALPHABET[encryptCharPos % 26]
 
-        result += decryptChar
+        result += encryptChar
 
-        log(f"[LOG] final: it: {letterIt} Char: {letter} decrypt: {decryptChar}")
+        log(f"[LOG] final: it: {letterIt} Char: {letter} encrypt: {encryptChar}")
 
-    log(f"[LOG] Finished decrypting. Final word: {result}")
+    log(f"[LOG] Finished encrypting. Final word: {result}")
     return result
 
-print("Message: " + decrypt("HALLO", "J"))
+print("Message: " + rotorEncryption(message, KEY, encryptDict))
