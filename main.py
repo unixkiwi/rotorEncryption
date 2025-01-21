@@ -131,6 +131,7 @@ def log(msg: str):
 def rotorEncryption(text: str, key: str, encryptDict):
     result: str = ""
 
+    text = text.replace(' ', "").replace('\n', "")
     text = text.upper()
 
     keyPos = ALPHABET.index(key)
@@ -164,13 +165,13 @@ def rotorEncryption(text: str, key: str, encryptDict):
     return result
 
 if args.brute_force:
-    if not args.expected_word: raise argparse.ArgumentTypeError(f"Expected an expected_word with -e '' ")
+    print("If you want to log all solutions pass -l")
 
     for ch in ALPHABET:
         if args.verbose_brute_force:
             print(f"Char: {ch} Word: {rotorEncryption(message, ch, encryptDict)}")
 
-        if args.expected_word.upper() == rotorEncryption(message, ch, encryptDict):
+        if args.expected_word and args.expected_word.upper() == rotorEncryption(message, ch, encryptDict):
             print(f"\nChar: {ch} Word: {rotorEncryption(message, ch, encryptDict)}\n")
             break
 else:
