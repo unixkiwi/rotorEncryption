@@ -25,7 +25,7 @@ def loadFile(path):
 
     return result
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description="Decrypt and encrypt messages using a key character and a rotor.")
 
 parser.add_argument(
     "-v", "--verbose",
@@ -37,6 +37,27 @@ parser.add_argument(
     "-f", "--config_file",
     type = verifyPath,
     help = "Take input file",
+    required=False
+)
+
+parser.add_argument(
+    "-b", "--brute_force",
+    action = "store_true",
+    help = "Bruteforce every key",
+    required=False
+)
+
+parser.add_argument(
+    "-l", "--verbose_brute_force",
+    action = "store_true",
+    help = "Log every bruteforce",
+    required=False
+)
+
+parser.add_argument(
+    "-e", "--expected_word",
+    type = str,
+    help = "The word expected when bruteforce",
     required=False
 )
 
@@ -142,4 +163,15 @@ def rotorEncryption(text: str, key: str, encryptDict):
     log(f"[LOG] Finished encrypting. Final word: {result}")
     return result
 
-print("Message: " + rotorEncryption(message, KEY, encryptDict))
+if args.brute_force:
+    if not args.expected_word: raise argparse.ArgumentTypeError(f"Expected an expected_word with -e '' ")
+
+    for ch in ALPHABET:
+        if args.verbose_brute_force:
+            print(f"Char: {ch} Word: {rotorEncryption(message, ch, encryptDict)}")
+
+        if args.expected_word.upper() == rotorEncryption(message, ch, encryptDict):
+            print(f"\nChar: {ch} Word: {rotorEncryption(message, ch, encryptDict)}\n")
+            break
+else:
+    print(rotorEncryption(message, KEY, encryptDict))
