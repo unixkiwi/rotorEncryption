@@ -21,3 +21,7 @@ It's a command line tool.
 - -c (required) specify the key character to encrypt takes a char from the alphabet
 - -f/--config_file (not required) specify a config.json file
 - -v/--verbose (not required) show logs
+
+## ToDo
+- [x] Arguments
+- [ ] option to brute force
