@@ -13,6 +13,7 @@ First you need to clone this repo with the main.py file. The config.json is just
 
 ## Usage
 It's a command line tool.
+
 `python3 main.py [-v] [-f] -c -m`
 
 ### Arguments:
