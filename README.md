@@ -1,4 +1,4 @@
-# Rotor Encryption
+uir# Rotor Encryption
 So, this is a project based on a task I saw. The goal was it to decrypt a given text with an Enima like machine, it has just one rotor. You also get a char which is the key for how much the rotor is rotated at the beginning.
 
 ## How it works
@@ -14,14 +14,17 @@ First you need to clone this repo with the main.py file. The config.json is just
 ## Usage
 It's a command line tool.
 
-`python3 main.py [-v] [-f] -c -m`
+`python3 main.py [-b -e -l] [-v] [-f] -c -m`
 
 ### Arguments:
 - -m/--msg (required) specify the message to encrypt in double quotes
 - -c (required) specify the key character to encrypt takes a char from the alphabet
 - -f/--config_file (not required) specify a config.json file
 - -v/--verbose (not required) show logs
+- -l/--verbose_brute_force (not required) show all attempts of the bruteforce
+- -b/--brute_force (not required) bruteforce all keys of the alphabet
+- -e/--expected_word (required when bruteforce) stop when expected word is found
 
 ## ToDo
 - [x] Arguments
-- [ ] option to brute force
+- [x] option to brute force
