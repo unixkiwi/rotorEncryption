@@ -14,7 +14,7 @@ First you need to clone this repo with the main.py file. The config.json is just
 ## Usage
 It's a command line tool.
 
-`python3 main.py [-b -e -l] [-v] [-f] -c -m`
+`python3 main.py [-v] [-f] -c -m`
 
 ### Arguments:
 - -m/--msg (required) specify the message to encrypt in double quotes
@@ -23,7 +23,7 @@ It's a command line tool.
 - -v/--verbose (not required) show logs
 - -l/--verbose_brute_force (not required) show all attempts of the bruteforce
 - -b/--brute_force (not required) bruteforce all keys of the alphabet
-- -e/--expected_word (required when bruteforce) stop when expected word is found
+- -e/--expected_word (not required) stop when expected word is found
 
 ## ToDo
 - [x] Arguments
