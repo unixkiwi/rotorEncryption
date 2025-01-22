@@ -1,4 +1,4 @@
-uir# Rotor Encryption
+# Rotor Encryption
 So, this is a project based on a task I saw. The goal was it to decrypt a given text with an Enima like machine, it has just one rotor. You also get a char which is the key for how much the rotor is rotated at the beginning.
 
 ## How it works
